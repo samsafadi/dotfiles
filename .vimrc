@@ -63,3 +63,4 @@ nnoremap <leader><space> :nohlsearch<CR>
 :nnoremap $ <nop>
 :nnoremap ^ <nop>
 :set mouse=a
+:syntax on
