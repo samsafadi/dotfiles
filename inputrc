@@ -1,0 +1,11 @@
+# Don't need them cases
+set completion-ignore-case on
+set completion-prefix-display-length 2
+
+# Vi masterrace
+set editing-mode vi
+set keymap vi-command
+
+"jk": vi-movement-mode
+
+TAB: menu-complete
