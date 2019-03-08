@@ -12,26 +12,14 @@ call vundle#begin()
 
 " let Vundle manage Vundle, required
 Plugin 'VundleVim/Vundle.vim'
-
-" The following are examples of different formats supported.
-" Keep Plugin commands between vundle#begin/end.
-" plugin on GitHub repo
-Plugin 'tpope/vim-fugitive'
-" plugin from http://vim-scripts.org/vim/scripts.html
-" Plugin 'L9'
-" Git plugin not hosted on GitHub
-Plugin 'git://git.wincent.com/command-t.git'
-" The sparkup vim script is in a subdirectory of this repo called vim.
-" Pass the path to set the runtimepath properly.
-Plugin 'rstacruz/sparkup', {'rtp': 'vim/'}
-" Install L9 and avoid a Naming conflict if you've already installed a
-" different version somewhere else.
-" Plugin 'ascenator/L9', {'name': 'newL9'}
-
 Plugin 'flazz/vim-colorschemes'
-Plugin 'tranvansang/vim-close-pair'
+"Plugin 'tranvansang/vim-close-pair'
 Plugin 'davidhalter/jedi-vim'
 Plugin 'ervandew/supertab'
+Plugin 'vim-airline/vim-airline'
+Plugin 'vim-airline/vim-airline-themes'
+Plugin 'fatih/vim-go'
+Plugin 'Townk/vim-autoclose'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -75,3 +63,6 @@ map <C-j> <C-W>j
 map <C-k> <C-W>k
 map <C-h> <C-W>h
 map <C-l> <C-W>l
+
+" airline
+let g:airline_powerline_fonts = 1
