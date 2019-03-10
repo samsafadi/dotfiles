@@ -1,24 +1,23 @@
 filetype off
-" set the runtime path to include Vundle and initialize
-set rtp+=~/.config/nvim/bundle/Vundle.vim
-call vundle#begin('~/.config/nvim/bundle')
+" set the runtime path to include vim-plug and initialize
+call plug#begin('~/.config/nvim/plugged')
 
-" let Vundle manage Vundle, required
-Plugin 'VundleVim/Vundle.vim'
-Plugin 'flazz/vim-colorschemes'
-Plugin 'airblade/vim-gitgutter'
-Plugin 'davidhalter/jedi-vim'
-Plugin 'ervandew/supertab'
-Plugin 'vim-airline/vim-airline'
-Plugin 'vim-airline/vim-airline-themes'
-Plugin 'fatih/vim-go'
+Plug 'flazz/vim-colorschemes'
+Plug 'airblade/vim-gitgutter'
+"Plug 'davidhalter/jedi-vim'
+"Plug 'ervandew/supertab'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+Plug 'fatih/vim-go'
+Plug 'Townk/vim-autoclose'
+Plug 'Valloric/YouCompleteMe'
 
-" All of your Plugins must be added before the following line
-call vundle#end()
+" All of your Plugs must be added before the following line
+call plug#end()
 
 let mapleader = ","
 
-filetype plugin indent on  " allows auto-indenting depending on file type
+filetype plugin indent on   " allows auto-indenting depending on file type
 set nocompatible            " Disable compatibility to old-time vi
 set showmatch               " Show matching brackets.
 set ignorecase              " Do case insensitive matching
