@@ -116,4 +116,3 @@ fi
 export WINEPREFIX=/home/bassam/prefix32
 
 bind 'TAB:menu-complete'
-bind '"jk":vi-movement-mode'
