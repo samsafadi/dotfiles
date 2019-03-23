@@ -66,8 +66,7 @@ unset color_prompt force_color_prompt
 # If this is an xterm set the title to user@host:dir
 case "$TERM" in
 xterm*|rxvt*)
-	PS1="\[$(tput bold)\]\[$(tput setaf 5)\][\[$(tput setaf 2)\]\u\[$(tput setaf 7)\]@\[$(tput setaf 6)\]\h \[$(tput setaf 5)\]\W\[$(tput setaf 5)\]]\[$(tput setaf 7)\]\\$ \[$(tput sgr0)\]"
-
+    PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1"
     ;;
 *)
     ;;
@@ -112,7 +111,5 @@ if ! shopt -oq posix; then
     . /etc/bash_completion
   fi
 fi
-
-export WINEPREFIX=/home/bassam/prefix32
 
 bind 'TAB:menu-complete'
