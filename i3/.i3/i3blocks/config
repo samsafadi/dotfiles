@@ -24,3 +24,6 @@ interval=5
 interval=1
 label=📅
 
+[wifi]
+label=📶
+interval=60

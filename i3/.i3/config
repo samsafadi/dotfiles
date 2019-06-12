@@ -208,18 +208,21 @@ exec_always feh --bg-scale /home/bassam/Pictures/liverpool2019champions.jpg
 # Pulse Audio controls
 bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume 0 +5% && pkill -RTMIN+1 i3blocks #increase sound volume
 bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume 0 -5% && pkill -RTMIN+1 i3blocks #decrease sound volume
-bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute 0 toggle # mute sound
+bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute 0 toggle && pkill -RTMIN+1 i3blocks # mute sound
 
 # Screen brightness controls
 bindsym XF86MonBrightnessUp exec light -A 10 && pkill -RTMIN+1 i3blocks # increase screen brightness
 bindsym XF86MonBrightnessDown exec light -U 10 && pkill -RTMIN+1 i3blocks # decrease screen brightness
 
 # Lock on lid close
-exec --no-startup-id xss-lock -- i3-lock
-bindsym ctrl+$mod+l exec --no-startup-id sleep 1 && xset dpms force suspend
+exec --no-startup-id xautolock -time 4 -locker "i3lock-wrapper -l"
 
 # Compton
 exec_always --no-startup-id compton -f
 
 # Natural Scrolling
 exec_always --no-startup-id xinput set-prop 12 288 1
+
+# switch workspaces
+bindsym Mod1+Control+Left workspace prev 
+bindsym Mod1+Control+Right workspace next
