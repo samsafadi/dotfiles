@@ -70,3 +70,6 @@ let g:airline_powerline_fonts = 1
 
 " tab completion for deoplete
 inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+
+" transparent background
+hi Normal guibg=NONE ctermbg=NONE
