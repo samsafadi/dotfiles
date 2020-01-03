@@ -217,29 +217,17 @@ client.background       #FFFFFF
 # finds out, if available)
 bar {
         #status_command i3status
-        font pango:SF Pro Display 11
+        font pango:mono
         status_command SCRIPT_DIR=~/.scripts i3blocks -c ~/.i3/i3blocks/config
 	    position top
 }
-
-#######################################################################
-# automatically start i3-config-wizard to offer the user to create a
-# keysym-based config which used their favorite modifier (alt or windows)
-#
-# i3-config-wizard will not launch if there already is a config file
-# in ~/.i3/config.
-#
-# Please remove the following exec line:
-#######################################################################
-exec i3-config-wizard
 
 for_window [class="^.*"] border pixel 3
 gaps inner 10
 gaps outer 10
 
 # wallpaper
-exec_always feh --bg-scale /home/bassam/Pictures/liverpool2019champions.jpg
-
+exec_always feh --bg-scale /home/bassam/walls/neko.jpg
 # Alsa controls
 # Pulse Audio controls
 bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume 0 +5% && pkill -RTMIN+1 i3blocks #increase sound volume
@@ -251,7 +239,7 @@ bindsym XF86MonBrightnessUp exec light -A 10 && pkill -RTMIN+1 i3blocks # increa
 bindsym XF86MonBrightnessDown exec light -U 10 && pkill -RTMIN+1 i3blocks # decrease screen brightness
 
 # Lock on lid close
-exec_always --no-startup-id xss-lock -- i3lock -i ~/Pictures/devilpun.png
+exec_always --no-startup-id xss-lock -- i3lock -i ~/walls/neko.jpg
 
 # Compton
 exec_always --no-startup-id compton -f

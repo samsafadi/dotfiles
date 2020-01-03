@@ -1,11 +1,5 @@
 # Don't need them cases
 set completion-ignore-case on
 set completion-prefix-display-length 2
-set show-mode-in-prompt on
-
-# yeetus vitus
-set editing-mode vi
-set vi-cmd-mode-string "\1\e[2 q\2"
-set vi-ins-mode-string "\1\e[6 q\2"
 
 TAB: menu-complete

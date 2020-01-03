@@ -3,7 +3,6 @@ stty -ixon # Disable ctrl-s and ctrl-q.
 shopt -s autocd #Allows you to cd into directory merely by typing the directory name.
 HISTSIZE= HISTFILESIZE= # Infinite history.
 
-TERM=termite
 PS1="\[$(tput bold)\]\[$(tput setaf 5)\][\[$(tput setaf 2)\]\u\[$(tput setaf 7)\]@\[$(tput setaf 6)\]\h \[$(tput setaf 5)\]\W\[$(tput setaf 5)\]]\[$(tput setaf 7)\]\\$ \[$(tput sgr0)\]"
 export PATH=~/anaconda3/bin:$PATH
 
@@ -11,6 +10,4 @@ export PATH=~/anaconda3/bin:$PATH
 if [ -f ~/.bash_aliases ]; then
 . ~/.bash_aliases
 fi
-export TERM
 
-bind '"jk":vi-movement-mode'
