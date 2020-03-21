@@ -1,5 +1,5 @@
 " Change map leader from \ to ,
-let mapleader = ","
+let mapleader = " "
 
 filetype off
 set nocompatible            " Disable compatibility to old-time vi
@@ -7,26 +7,37 @@ set nocompatible            " Disable compatibility to old-time vi
 " set the runtime path to include vim-plug and initialize
 call plug#begin('~/.config/nvim/plugged')
 
-if has('nvim')
-  Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-else
-  Plug 'Shougo/deoplete.nvim'
-  Plug 'roxma/nvim-yarp'
-  Plug 'roxma/vim-hug-neovim-rpc'
-endif
-Plug 'deoplete-plugins/deoplete-jedi', {'for': 'python'}
-Plug 'racer-rust/vim-racer', {'for': 'rust'}
+" Semantic Language Support
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+
+" Look and feel
 Plug 'flazz/vim-colorschemes'
 Plug 'airblade/vim-gitgutter'
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
+Plug 'machakann/vim-highlightedyank'
+Plug 'itchyny/lightline.vim'
+"
+" makers and syntax checkers
+Plug 'racer-rust/vim-racer', {'for': 'rust'}
+Plug 'chriskempson/base16-vim'
+Plug 'morhetz/gruvbox'
+
+
+" Syntactic Language Support
+Plug 'rust-lang/rust.vim'
 Plug 'fatih/vim-go'
-Plug 'jiangmiao/auto-pairs'
-
-
+" latex
+Plug 'lervag/vimtex'
 call plug#end()
 
-let g:deoplete#enable_at_startup = 1
+" deal with colors
+if !has('gui_running')
+  set t_Co=256
+endif
+if (match($TERM, "-256color") != -1) && (match($TERM, "screen-256color") == -1)
+  " screen does not (yet) support truecolor
+  set termguicolors
+endif
+
 filetype plugin indent on   
 
 nnoremap <leader><space> :nohlsearch<CR>
@@ -37,9 +48,8 @@ nnoremap <leader><space> :nohlsearch<CR>
 :set expandtab              
 :set autoindent
 :set number
-:colorscheme badwolf
+:colorscheme jellybeans
 :set showcmd
-:set cursorline
 :filetype indent on
 :set wildmenu
 :set lazyredraw
@@ -47,6 +57,7 @@ nnoremap <leader><space> :nohlsearch<CR>
 :set incsearch
 :set hlsearch
 :set ignorecase             
+:set relativenumber number
 :nnoremap B ^
 :nnoremap E $
 :nnoremap $ <nop>
@@ -55,21 +66,99 @@ nnoremap <leader><space> :nohlsearch<CR>
 :vnoremap E $
 :vnoremap ^ <nop>
 :vnoremap $ <nop>
-:set mouse=a
+:set mouse=a 
 :syntax on
 :set wildmode=longest,list   
+:set termguicolors
 
-" Splits    
-map <C-j> <C-W>j    
-map <C-k> <C-W>k    
-map <C-h> <C-W>h    
-map <C-l> <C-W>l  
+" permanent undo
+set undodir=~/.vimdid
+set undofile
 
-" airline
-let g:airline_powerline_fonts = 1
+" ncm2 options
+" enable ncm2 for all buffers
+"autocmd BufEnter * call ncm2#enable_for_buffer()
 
-" tab completion for deoplete
-inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+" IMPORTANT: :help Ncm2PopupOpen for more information
+"set completeopt=noinsert,menuone,noselect
 
-" transparent background
-hi Normal guibg=NONE ctermbg=NONE
+" suppress the annoying 'match x of y', 'The only match' and 'Pattern not
+" found' messages
+"set shortmess+=c
+
+" CTRL-C doesn't trigger the InsertLeave autocmd . map to <ESC> instead.
+inoremap <c-c> <ESC>
+
+" When the <Enter> key is pressed while the popup menu is visible, it only
+" hides the menu. Use this mapping to close the menu and also start a new
+" line.
+inoremap <expr> <CR> (pumvisible() ? "\<c-y>\<cr>" : "\<CR>")
+
+" Use <TAB> to select the popup menu:
+inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+
+" latexmk
+let g:tex_flavor = "xelatex"
+let g:tex_fast = "cmMprs"
+let g:tex_conceal = ""
+let g:tex_fold_enabled = 1
+let g:tex_comment_nospell = 1
+let g:vimtex_view_general_viewer = 'evince'
+
+:set foldlevel=99
+
+let g:vimtex_compiler_latexmk = { 
+        \ 'executable' : 'latexmk',
+        \ 'options' : [ 
+        \   '-xelatex',
+        \   '-file-line-error',
+        \   '-synctex=1',
+        \   '-interaction=nonstopmode',
+        \ ],
+        \}
+
+" Use tab for trigger completion with characters ahead and navigate.
+" Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+" Use <c-.> to trigger completion.
+inoremap <silent><expr> <c-.> coc#refresh()
+" Use <cr> to confirm completion, `<C-g>u` means break undo chain at current position.
+" Coc only does snippet and additional edit on confirm.
+" inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+" Or use `complete_info` if your vim support it, like:
+inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
+
+
+" Coc-Explorer
+nmap <space>e :CocCommand explorer<CR>
+let g:coc_explorer_global_presets = {
+\   '.vim': {
+\      'root-uri': '~/.vim',
+\   },
+\   'floating': {
+\      'position': 'floating',
+\   },
+\   'floatingLeftside': {
+\      'position': 'floating',
+\      'floating-position': 'left-center',
+\      'floating-width': 50,
+\   },
+\   'floatingRightside': {
+\      'position': 'floating',
+\      'floating-position': 'left-center',
+\      'floating-width': 50,
+\   },
+\   'simplify': {
+\     'file.child.template': '[selection | clip | 1] [indent][icon | 1] [filename omitCenter 1]'
+\   }
+\ }
+

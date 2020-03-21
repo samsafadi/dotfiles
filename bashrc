@@ -1,13 +1,31 @@
-#!/bin/bash
-stty -ixon # Disable ctrl-s and ctrl-q.
-shopt -s autocd #Allows you to cd into directory merely by typing the directory name.
-HISTSIZE= HISTFILESIZE= # Infinite history.
+# .bashrc
 
-PS1="\[$(tput bold)\]\[$(tput setaf 5)\][\[$(tput setaf 2)\]\u\[$(tput setaf 7)\]@\[$(tput setaf 6)\]\h \[$(tput setaf 5)\]\W\[$(tput setaf 5)\]]\[$(tput setaf 7)\]\\$ \[$(tput sgr0)\]"
-export PATH=~/anaconda3/bin:$PATH
-
-# enable bash_aliases by uncom the next 3 lines GU 12/1/2008
-if [ -f ~/.bash_aliases ]; then
-. ~/.bash_aliases
+# Source global definitions
+if [ -f /etc/bashrc ]; then
+	. /etc/bashrc
 fi
 
+PS1="\[$(tput bold)\]\[$(tput setaf 2)\]\u@\h\[$(tput setaf 7)\]:\[$(tput setaf 4)\]\w\[$(tput setaf 7)\]$\[$(tput sgr0)\] "
+
+# User specific environment
+if ! [[ "$PATH" =~ "$HOME/.local/bin:$HOME/bin:" ]]
+then
+    PATH="$HOME/.local/bin:$HOME/bin:$PATH"
+fi
+export PATH
+
+export GTK_IM_MODULE=ibus
+export XMODIFIERS=@im=ibus
+export QT_IM_MODULE=ibus
+
+# Uncomment the following line if you don't like systemctl's auto-paging feature:
+# export SYSTEMD_PAGER=
+
+# User specific aliases and functions
+PATH=$PATH:~/anaconda3/bin
+export PATH
+
+alias ls="ls --color"
+alias n=nvim
+
+export EDITOR=nvim
