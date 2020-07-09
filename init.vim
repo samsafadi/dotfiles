@@ -18,7 +18,8 @@ call plug#begin('~/.config/nvim/plugged')
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 " look and feel
-Plug 'morhetz/gruvbox'
+Plug 'gruvbox-community/gruvbox'
+Plug 'shinchu/lightline-gruvbox.vim'
 Plug 'nanotech/jellybeans.vim'
 Plug 'airblade/vim-gitgutter'
 Plug 'machakann/vim-highlightedyank'
@@ -107,8 +108,9 @@ let g:lightline = {
 " =============================================================================
 
 " colors
-colorscheme jellybeans
-"let g:gruvbox_contrast_dark = 'hard'
+colorscheme gruvbox
+let g:gruvbox_contrast_dark = 'hard'
+"let g:jellybeans_use_term_italics = 1
 
 nnoremap <leader>n :nohlsearch<cr>
 inoremap jk <esc>
