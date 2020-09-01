@@ -1,8 +1,8 @@
 [colors]
-background = #282a36
-background-alt = #44475a
-foreground = #f8f8f2
-foreground-alt = #6272a4
+background = #222
+background-alt = #444
+foreground = #fff
+foreground-alt = #eee
 primary = #f8f8f2
 secondary = #6272a4
 alert = #ff5555
@@ -13,8 +13,8 @@ pink = #ff79c6
 purple = #bd93f9
 #deep-purple = #5e35b1
 #indigo = #3949ab
-#blue = #1e88e5
-#light-blue = #039be5
+blue = #285577
+light-blue = #2e9ef4
 cyan = #8be9fd
 #teal = #00897b
 green = #50fa7b
@@ -44,8 +44,8 @@ padding = 0
 module-margin = 1
 separator = %{F#757575}|%{F-}
 
-font-0 = "Inconsolata:size=11;2"
-font-1 = "Source Code Pro:size=10;2"
+font-0 = "Inconsolata:size=12;2"
+font-1 = "DejaVu Sans Mono:size=10;2"
 font-2 = "Noto Sans Emoji:size=10;2"
 font-3 = "Noto Sans Symbols:size=10;4"
 font-4 = "Noto Sans Symbols2:size=10;4"
@@ -100,9 +100,9 @@ enable-scroll = false
 
 label-focused = %name%
 label-focused-foreground = ${colors.foreground}
-label-focused-background = ${colors.background}
-label-focused-underline = ${colors.purple}
+label-focused-background = ${colors.blue}
 label-focused-padding = 1
+#label-focused-underline = ${colors.blue}
 
 label-unfocused = %name%
 label-unfocused-foreground = ${colors.foreground}
@@ -110,7 +110,7 @@ label-unfocused-background = ${colors.background}
 label-unfocused-padding = 1
 
 label-visible = %name%
-label-visible-underline = #555555
+label-visible-underline = ${colors.background-alt}
 label-visible-padding = 1
 
 label-urgent = %name%
