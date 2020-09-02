@@ -1,0 +1,6 @@
+configuration {
+ modi: "combi";
+ theme: "gruvbox-dark";
+ font: "jetbrains mono 12";
+ combi-modi: "drun,run";
+ }
