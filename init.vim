@@ -2,7 +2,6 @@
 " Compatible with vim and neovim
 " samsafadi@berkeley.edu
 
-set shell=/bin/zsh
 let mapleader = " "
 
 filetype off
@@ -19,18 +18,16 @@ Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 " look and feel
 Plug 'gruvbox-community/gruvbox'
-Plug 'shinchu/lightline-gruvbox.vim'
 Plug 'nanotech/jellybeans.vim'
+Plug 'romainl/Apprentice'
 Plug 'airblade/vim-gitgutter'
 Plug 'machakann/vim-highlightedyank'
-Plug 'justinmk/vim-sneak'
 Plug 'dag/vim-fish'
 Plug 'ekalinin/Dockerfile.vim'
-Plug 'itchyny/lightline.vim'
+Plug 'christoomey/vim-tmux-navigator'
 
 " makers and syntax checkers
 Plug 'racer-rust/vim-racer', {'for': 'rust'}
-"Plug 'davidhalter/jedi-vim'
 
 " Git
 Plug 'tpope/vim-fugitive'
@@ -43,8 +40,6 @@ Plug 'airblade/vim-rooter'
 " syntactic language support
 Plug 'rust-lang/rust.vim'
 
-" latex
-Plug 'lervag/vimtex'
 call plug#end()
 
 " wiki
@@ -69,51 +64,14 @@ inoremap <silent><expr> <c-.> coc#refresh()
 " or use `complete_info` if your vim support it, like:
 inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<c-y>" : "\<c-g>u\<cr>"
 
-" latexmk
-let g:tex_flavor = "xelatex"
-let g:tex_fast = "cmmprs"
-let g:tex_conceal = ""
-let g:tex_fold_enabled = 1
-let g:tex_comment_nospell = 1
-let g:vimtex_view_general_viewer = 'evince'
-
-set foldlevel=99
-let g:vimtex_compiler_latexmk = {
-        \ 'executable' : 'latexmk',
-        \ 'options' : [ 
-        \   '-xelatex',
-        \   '-file-line-error',
-        \   '-synctex=1',
-        \   '-interaction=nonstopmode',
-        \ ],
-        \}
-
-" vimwiki
-let g:vimwiki_list = [{'path':'~/Dropbox/vimwiki', 'path_html':'~/Dropbox/vimwiki/public_html'}]
-
-" airline
-let g:lightline = {
-      \ 'colorscheme': 'jellybeans',
-      \ 'active': {
-      \   'left': [ [ 'mode', 'paste' ],
-      \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]
-      \ },
-      \ 'component_function': {
-      \   'gitbranch': 'FugitiveHead'
-      \ },
-      \ }
-
 " =============================================================================
 " # Editor settings
 " =============================================================================
 
 " colors
-colorscheme gruvbox
-let g:gruvbox_contrast_dark = 'hard'
-"let g:jellybeans_use_term_italics = 1
 
 nnoremap <leader>n :nohlsearch<cr>
-inoremap jk <esc>
+"inoremap jk <esc>
 set tabstop=4
 set softtabstop=4
 set shiftwidth=4
@@ -138,13 +96,18 @@ set background=dark
 set splitbelow
 set splitright
 nnoremap <leader>r :so ~/.config/nvim/init.vim<cr>
-set laststatus=2
-set noshowmode
+set laststatus=1
+"set noshowmode
 set scrolloff=3
+colo peachpuff
+hi Comment 	ctermfg=green
+
+" Set tabstop 2 for sql files
+autocmd Filetype sql setlocal ts=2 sw=2 expandtab
 
 filetype plugin indent on
 " Terminal mode
-tnoremap jk <c-\><c-n>
+tnoremap <c-[> <c-\><c-n>
 if !has('nvim')
 noremap <silent> <leader>t :term<cr>
     augroup TerminalStuff
@@ -171,13 +134,6 @@ nnoremap <silent> <leader>D :bd!<cr>
 nnoremap <leader>b :Buffers<cr>
 nnoremap <leader>f :Files<cr>
 
-" Sneak instead fof f (because f sucks)
-" Use <leader>s to use 2 character sneak
-map f <Plug>Sneak_f
-map F <Plug>Sneak_F
-map t <Plug>Sneak_t
-map T <Plug>Sneak_T
-
 " deal with wrapping
 nnoremap j gj
 nnoremap k gk
@@ -202,3 +158,15 @@ end
 " sneak highlight color
 highlight Sneak guifg=black guibg=white ctermfg=black ctermbg=white
 highlight SneakScope guifg=red guibg=yellow ctermfg=red ctermbg=yellow
+
+" tmux integration
+let g:tmux_navigator_no_mappings = 1
+
+nnoremap <silent> <a-h> :TmuxNavigateLeft<cr>
+nnoremap <silent> <a-j> :TmuxNavigateDown<cr>
+nnoremap <silent> <a-k> :TmuxNavigateUp<cr>
+nnoremap <silent> <a-l> :TmuxNavigateRight<cr>
+nnoremap <silent> <a-\> :TmuxNavigatePrevious<cr>
+
+" transparent background keep at end
+" :hi Normal guibg=NONE ctermbg=NONE
