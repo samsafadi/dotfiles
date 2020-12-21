@@ -17,8 +17,6 @@ call plug#begin('~/.config/nvim/plugged')
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 " look and feel
-Plug 'gruvbox-community/gruvbox'
-Plug 'nanotech/jellybeans.vim'
 Plug 'romainl/Apprentice'
 Plug 'airblade/vim-gitgutter'
 Plug 'machakann/vim-highlightedyank'
