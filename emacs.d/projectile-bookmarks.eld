@@ -1,0 +1,1 @@
+("~/work/research/robotic_wavefront_shaping/" "~/work/research/bertviz/" "~/work/classes/cs189/")
