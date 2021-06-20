@@ -13,7 +13,7 @@ export FZF_BASE=/usr/bin/fzf
 if [[ -f /etc/DIR_COLORS ]] ; then
   eval $(dircolors -b /etc/DIR_COLORS)
 fi
-ZSH_THEME="powerlevel10k/powerlevel10k"
+ZSH_THEME="cypher"
 
 # Do menu-driven completion.
 zstyle ':completion:*' menu select
