@@ -1,5 +1,5 @@
-" Bassam Safadi's vimrc
-" Compatible with vim and neovim
+" Bassam Safadi's init.vim
+" nvim 0.5.0 or greater
 " samsafadi@berkeley.edu
 
 let mapleader = " "
@@ -12,16 +12,23 @@ set nocompatible            " Disable compatibility to old-time vi
 " # PLUGINS
 " =============================================================================
 " set the runtime path to include vim-plug and initialize
-call plug#begin('~/.vim/plugged')
+call plug#begin('~/.config/nvim/plugged')
 
 " look and feel
-" Plug 'romainl/Apprentice'
-Plug 'airblade/vim-gitgutter'
+Plug 'gruvbox-community/gruvbox'
 Plug 'machakann/vim-highlightedyank'
 Plug 'christoomey/vim-tmux-navigator'
+Plug 'romainl/vim-cool'
+Plug 'hoob3rt/lualine.nvim'
 
 " makers and syntax checkers
-Plug 'racer-rust/vim-racer', {'for': 'rust'}
+Plug 'neovim/nvim-lspconfig'
+Plug 'nvim-treesitter/nvim-treesitter'
+Plug 'hrsh7th/cmp-nvim-lsp'
+Plug 'hrsh7th/cmp-buffer'
+Plug 'hrsh7th/cmp-path'
+Plug 'hrsh7th/cmp-cmdline'
+Plug 'hrsh7th/nvim-cmp'
 
 " Git
 Plug 'tpope/vim-fugitive'
@@ -46,14 +53,14 @@ call plug#end()
 " # Editor settings
 " =============================================================================
 
-" colors
 nnoremap <leader>n :noh<cr>
-set tabstop=4
-set softtabstop=4
-set shiftwidth=4
+set tabstop=2
+set softtabstop=2
+set shiftwidth=2
 set expandtab
 set autoindent
-set number
+set smartindent
+set number relativenumber
 set showcmd
 filetype indent on
 set lazyredraw
@@ -70,17 +77,17 @@ set wildmode=longest:full,full
 set background=dark
 set splitbelow
 set splitright
-nnoremap <leader>r :so ~/.vimrc<cr>
-set laststatus=1
+nnoremap <leader>r :w<cr>:so ~/.config/nvim/init.vim<cr>:e<cr>:noh<cr>
+set laststatus=2
 set scrolloff=3
-colo default
+set t_co=256
+colorscheme gruvbox
+" hi Comment ctermfg=green
 set backspace=indent,eol,start
+set completeopt=menuone,noselect
 
-" color adjustments
-hi Comment 	ctermfg=green
-
-" Set tabstop 2 for sql files
-autocmd Filetype sql setlocal ts=2 sw=2 expandtab
+" Set tabstop 4 for python files
+autocmd Filetype python setlocal ts=4 sw=4 softtabstop=4 expandtab
 
 filetype plugin indent on
 " Terminal mode
@@ -98,17 +105,20 @@ nnoremap <leader>b :Buffers<cr>
 nnoremap <leader>f :Files<cr>
 
 " deal with wrapping
-nnoremap j gj
-nnoremap k gk
-vnoremap j gj
-vnoremap k gk
+" nnoremap <silent> j gj
+" nnoremap <silent> k gk
+" vnoremap <silent> j gj
+" vnoremap <silent> k gk
 
 " permanent undo
-set undodir=~/.vimdid
+set undodir=~/config/nvim/vimdid
 set undofile
 
 " remember last position
 autocmd BufReadPost * if @% !~# '\.git[\/\\]COMMIT_EDITMSG$' && line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g`\"" | endif
+
+" rooter
+let g:rooter_patterns = ['.git', 'Makefile', '*.sln', 'build/env.sh']
 
 " sneak highlight color
 highlight Sneak guifg=black guibg=white ctermfg=black ctermbg=white
@@ -127,3 +137,94 @@ nnoremap <silent> <a-\> :TmuxNavigatePrevious<cr>
 let g:tex_flavor='latex'
 let g:vimtex_view_method='skim'
 let g:vimtex_quickfix_mode=0
+
+" lsp
+lua << EOF
+local nvim_lsp = require('lspconfig')
+
+local on_attach = function(client, bufnr)
+  buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
+end
+
+require'lspconfig'.jedi_language_server.setup{}
+EOF
+
+nnoremap <silent> <leader>t <cmd>lua vim.lsp.buf.definition()<CR>
+
+" lsp
+lua << EOF
+require'nvim-treesitter.configs'.setup {
+  highlight = { enable = true },
+  incremental_selection = { enable = true },
+}
+
+EOF
+
+" completion
+lua << EOF
+local cmp = require'cmp'
+
+require'cmp'.setup ({
+  mapping = {
+    ["<Tab>"] = cmp.mapping(function(fallback)
+      print("right")
+      if cmp.visible() then
+        cmp.select_next_item()
+      else
+        fallback()
+      end
+    end),
+    ["<S-Tab>"] = cmp.mapping(function(fallback)
+      print("left")
+      if cmp.visible() then
+        cmp.select_prev_item()
+      else
+        fallback()
+      end
+    end),
+  },
+
+  sources = {
+    { name = 'nvim_lsp' }
+  }
+})
+
+-- The nvim-cmp almost supports LSP's capabilities so You should advertise it to LSP servers..
+local capabilities = vim.lsp.protocol.make_client_capabilities()
+capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
+
+EOF
+
+inoremap <silent><expr> <TAB> pumvisible() ? "\<C-n>" : "\<TAB>"
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+
+" lualine
+lua << EOF
+require'lualine'.setup {
+  options = {
+    icons_enabled = false,
+    theme = 'gruvbox',
+    component_separators = {},
+    section_separators = {},
+    disabled_filetypes = {}
+  },
+  sections = {
+    lualine_a = {'mode'},
+    lualine_b = {'branch'},
+    lualine_c = {'filename'},
+    lualine_x = {'encoding', 'fileformat', 'filetype'},
+    lualine_y = {'progress'},
+    lualine_z = {'location'}
+  },
+  inactive_sections = {
+    lualine_a = {},
+    lualine_b = {},
+    lualine_c = {'filename'},
+    lualine_x = {'location'},
+    lualine_y = {},
+    lualine_z = {}
+  },
+  tabline = {},
+  extensions = {}
+}
+EOF
