@@ -20,10 +20,12 @@ Plug 'machakann/vim-highlightedyank'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'romainl/vim-cool'
 Plug 'hoob3rt/lualine.nvim'
+Plug 'nvim-tree/nvim-web-devicons'
+Plug 'akinsho/bufferline.nvim', { 'tag': '*' }
 
 " makers and syntax checkers
 Plug 'neovim/nvim-lspconfig'
-Plug 'nvim-treesitter/nvim-treesitter'
+Plug 'nvim-treesitter/nvim-treesitter', {'commit': '82c9486'}
 Plug 'hrsh7th/cmp-nvim-lsp'
 Plug 'hrsh7th/cmp-buffer'
 Plug 'hrsh7th/cmp-path'
@@ -38,11 +40,11 @@ Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'airblade/vim-rooter'
 
-" Python
-Plug 'psf/black', { 'branch': 'master' }
-
 " syntactic language support
 Plug 'rust-lang/rust.vim'
+
+" copilot
+Plug 'github/copilot.vim'
 
 " latex
 Plug 'lervag/vimtex', {'for': ['tex']}
@@ -81,6 +83,8 @@ nnoremap <leader>r :w<cr>:so ~/.config/nvim/init.vim<cr>:e<cr>:noh<cr>
 set laststatus=2
 set scrolloff=3
 set t_co=256
+let g:gruvbox_transparent_bg=1
+autocmd VimEnter * hi Normal ctermbg=NONE guibg=NONE
 colorscheme gruvbox
 " hi Comment ctermfg=green
 set backspace=indent,eol,start
@@ -103,12 +107,6 @@ nnoremap <silent> <leader>D :bd!<cr>
 " From fzf
 nnoremap <leader>b :Buffers<cr>
 nnoremap <leader>f :Files<cr>
-
-" deal with wrapping
-" nnoremap <silent> j gj
-" nnoremap <silent> k gk
-" vnoremap <silent> j gj
-" vnoremap <silent> k gk
 
 " permanent undo
 set undodir=~/config/nvim/vimdid
@@ -157,7 +155,6 @@ require'nvim-treesitter.configs'.setup {
   highlight = { enable = true },
   incremental_selection = { enable = true },
 }
-
 EOF
 
 " completion
@@ -192,11 +189,21 @@ require'cmp'.setup ({
 -- The nvim-cmp almost supports LSP's capabilities so You should advertise it to LSP servers..
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
-
 EOF
+
 
 inoremap <silent><expr> <TAB> pumvisible() ? "\<C-n>" : "\<TAB>"
 inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+
+" bufferline
+lua << EOF
+require("bufferline").setup{}
+EOF
+
+lua << EOF
+vim.g.copilot_no_tab_map = true
+vim.api.nvim_set_keymap("i", "<C-J>", 'copilot#Accept("<CR>")', { silent = true, expr = true })
+EOF
 
 " lualine
 lua << EOF
@@ -204,7 +211,7 @@ require'lualine'.setup {
   options = {
     icons_enabled = false,
     theme = 'gruvbox',
-    component_separators = {},
+    component_separators = '|',
     section_separators = {},
     disabled_filetypes = {}
   },
