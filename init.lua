@@ -128,7 +128,7 @@ require('lazy').setup({
     -- See `:help lualine.txt`
     opts = {
       options = {
-        icons_enabled = false,
+        icons_enabled = true,
         theme = 'gruvbox',
         component_separators = '|',
         section_separators = '',
@@ -191,6 +191,32 @@ require('lazy').setup({
   --
   --    For additional information see: https://github.com/folke/lazy.nvim#-structuring-your-plugins
   -- { import = 'custom.plugins' },
+
+  -- To make nvim remember where it left off
+  {
+    'vladdoster/remember.nvim',
+    config = function()
+      require('remember')
+    end,
+  },
+
+  -- Show buffers like they're tabs
+  {
+    'akinsho/bufferline.nvim',
+    version = "*",
+    dependencies = 'nvim-tree/nvim-web-devicons',
+    config = function()
+      require("bufferline").setup{}
+    end
+  },
+
+  -- for better handling of pairs [] {}
+  {
+    'windwp/nvim-autopairs',
+    event = "InsertEnter",
+    opts = {} -- this is equalent to setup({}) function
+  },
+
 }, {})
 
 -- [[ Setting options ]]
@@ -201,6 +227,7 @@ require('lazy').setup({
 vim.o.hlsearch = false
 
 -- Make relative line numbers default
+vim.wo.number = true
 vim.wo.relativenumber = true
 
 -- Enable mouse mode
@@ -236,16 +263,16 @@ vim.opt.hlsearch = true
 vim.o.termguicolors = true
 
 -- Transparency
-vim.cmd [[
-  hi Normal guibg=none ctermbg=none
-  hi LineNr guibg=none ctermbg=none
-  hi Folded guibg=none ctermbg=none
-  hi NonText guibg=none ctermbg=none
-  hi SpecialKey guibg=none ctermbg=none
-  hi VertSplit guibg=none ctermbg=none
-  hi SignColumn guibg=none ctermbg=none
-  hi EndOfBuffer guibg=none ctermbg=none
-]]
+-- vim.cmd [[
+--   hi Normal guibg=none ctermbg=none
+--   hi LineNr guibg=none ctermbg=none
+--   hi Folded guibg=none ctermbg=none
+--   hi NonText guibg=none ctermbg=none
+--   hi SpecialKey guibg=none ctermbg=none
+--   hi VertSplit guibg=none ctermbg=none
+--   hi SignColumn guibg=none ctermbg=none
+--   hi EndOfBuffer guibg=none ctermbg=none
+-- ]]
 
 -- Keymaps for better default experience
 -- See `:help vim.keymap.set()`
@@ -448,10 +475,24 @@ require('mason-lspconfig').setup()
 local servers = {
   -- clangd = {},
   -- gopls = {},
-   pyright = {},
+  pyright = {
+    settings = {
+      pyright = {
+        autoImportCompletion = true,
+      },
+      python = {
+        analysis = {
+          autoSearchPaths = true,
+          diagnosticMode = 'openFilesOnly',
+          useLibraryCodeForTypes = true,
+          typeCheckingMode = 'on'
+        }
+      }
+    }
+  },
   -- rust_analyzer = {},
-  -- tsserver = {},
-  -- html = { filetypes = { 'html', 'twig', 'hbs'} },
+  tsserver = {},
+  html = { filetypes = { 'html', 'twig', 'hbs'} },
 
   lua_ls = {
     Lua = {
@@ -507,7 +548,7 @@ cmp.setup {
     ['<C-Space>'] = cmp.mapping.complete {},
     ['<CR>'] = cmp.mapping.confirm {
       behavior = cmp.ConfirmBehavior.Replace,
-      select = true,
+      select = false,
     },
     ['<Tab>'] = cmp.mapping(function(fallback)
       if cmp.visible() then
