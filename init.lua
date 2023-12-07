@@ -4,6 +4,9 @@
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
+-- global variables
+PYTHON_PATH = '/Users/bassamsafadi/work/data/job-controller/.tox/py39/bin/python3.9'
+
 -- Install package manager
 --    https://github.com/folke/lazy.nvim
 --    `:help lazy.nvim.txt` for more info
@@ -110,40 +113,50 @@ require('lazy').setup({
       end,
     },
   },
-
   {
-    'ellisonleao/gruvbox.nvim',
+    'catppuccin/nvim',
+    name = "catppuccin",
     priority = 1000,
     config = function()
-      vim.cmd.colorscheme 'gruvbox'
-      require("gruvbox").setup({
-        terminal_colors = true,
-        transparent_mode = true,
+      require('catppuccin').setup({
+        flavour = 'mocha',
       })
+    vim.cmd.colorscheme('catppuccin-mocha')
     end,
   },
   {
     -- Set lualine as statusline
     'nvim-lualine/lualine.nvim',
     -- See `:help lualine.txt`
+    dependencies = 'nvim-tree/nvim-web-devicons',
     opts = {
       options = {
         icons_enabled = true,
-        theme = 'gruvbox',
+        theme = 'catppuccin',
         component_separators = '|',
         section_separators = '',
+      },
+      tabline = {
+        lualine_a = {
+          {
+            'buffers',
+            mode = 2,
+            icons_enabled = true,
+            icon = { 'X', align='right' }
+          },
+        },
       },
     },
   },
 
-  {
-    -- Add indentation guides even on blank lines
-    'lukas-reineke/indent-blankline.nvim',
-    -- Enable `lukas-reineke/indent-blankline.nvim`
-    -- See `:help ibl`
-    main = 'ibl',
-    opts = {},
-  },
+--   {
+--     -- Add indentation guides even on blank lines
+--     'lukas-reineke/indent-blankline.nvim',
+--     -- Enable `lukas-reineke/indent-blankline.nvim`
+--     -- See `:help ibl`
+--     main = 'ibl',
+--     opts = {},
+--   },
 
   -- "gc" to comment visual regions/lines
   { 'numToStr/Comment.nvim', opts = {} },
@@ -201,21 +214,61 @@ require('lazy').setup({
   },
 
   -- Show buffers like they're tabs
-  {
-    'akinsho/bufferline.nvim',
-    version = "*",
-    dependencies = 'nvim-tree/nvim-web-devicons',
-    config = function()
-      require("bufferline").setup{}
-    end
-  },
+--   {
+--     'akinsho/bufferline.nvim',
+--     version = "*",
+--     dependencies = 'nvim-tree/nvim-web-devicons',
+--     config = function()
+--       require("bufferline").setup{}
+--     end
+--   },
 
   -- for better handling of pairs [] {}
   {
     'windwp/nvim-autopairs',
     event = "InsertEnter",
-    opts = {} -- this is equalent to setup({}) function
+    config = function()
+      require('nvim-autopairs').setup({
+        disable_filetype = { "TelescopePrompt" },
+      })
+    end
   },
+
+  -- tmux integration
+  {
+    'alexghergh/nvim-tmux-navigation',
+    config = function()
+      local nvim_tmux_nav = require('nvim-tmux-navigation')
+
+      vim.keymap.set('n', "<M-h>", nvim_tmux_nav.NvimTmuxNavigateLeft)
+      vim.keymap.set('n', "<M-j>", nvim_tmux_nav.NvimTmuxNavigateDown)
+      vim.keymap.set('n', "<M-k>", nvim_tmux_nav.NvimTmuxNavigateUp)
+      vim.keymap.set('n', "<M-l>", nvim_tmux_nav.NvimTmuxNavigateRight)
+      vim.keymap.set('n', "<M-\\>", nvim_tmux_nav.NvimTmuxNavigateLastActive)
+      vim.keymap.set('n', "<M-Space>", nvim_tmux_nav.NvimTmuxNavigateNext)
+    end
+  },
+  {
+    "nvim-neotest/neotest",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "antoinemadec/FixCursorHold.nvim",
+      "nvim-neotest/neotest-python"
+    },
+    config = function()
+      require('neotest').setup({
+        adapters = {
+          require('neotest-python')({
+            dap = { justMyCode = false },
+            args = {"--log-level", "DEBUG"},
+            runner = "pytest",
+            python = PYTHON_PATH,
+            pytest_discover_instances = true,
+          })
+        }
+      })
+    end
+  }
 
 }, {})
 
@@ -227,8 +280,8 @@ require('lazy').setup({
 vim.o.hlsearch = false
 
 -- Make relative line numbers default
-vim.wo.number = true
-vim.wo.relativenumber = true
+vim.o.number = true
+vim.o.relativenumber = true
 
 -- Enable mouse mode
 vim.o.mouse = 'a'
@@ -259,20 +312,11 @@ vim.o.timeoutlen = 300
 vim.o.completeopt = 'menuone,noselect'
 vim.opt.hlsearch = true
 
+-- hide command line
+vim.o.cmdheight = 0
+
 -- NOTE: You should make sure your terminal supports this
 vim.o.termguicolors = true
-
--- Transparency
--- vim.cmd [[
---   hi Normal guibg=none ctermbg=none
---   hi LineNr guibg=none ctermbg=none
---   hi Folded guibg=none ctermbg=none
---   hi NonText guibg=none ctermbg=none
---   hi SpecialKey guibg=none ctermbg=none
---   hi VertSplit guibg=none ctermbg=none
---   hi SignColumn guibg=none ctermbg=none
---   hi EndOfBuffer guibg=none ctermbg=none
--- ]]
 
 -- Keymaps for better default experience
 -- See `:help vim.keymap.set()`
@@ -281,6 +325,13 @@ vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
 -- Remap for dealing with word wrap
 vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
 vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
+
+-- Nohighlight
+vim.keymap.set('n', '<leader>n', ':noh<Return>', { silent = true })
+
+-- Easy buffer movement
+vim.keymap.set('n', '<M-;>', ':bprevious<CR>', { silent = true })
+vim.keymap.set('n', '<M-\'>', ':bnext<CR>', { silent = true })
 
 -- [[ Highlight on yank ]]
 -- See `:help vim.highlight.on_yank()`
@@ -335,9 +386,14 @@ vim.defer_fn(function()
   require('nvim-treesitter.configs').setup {
     -- Add languages to be installed here that you want installed for treesitter
     ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'javascript', 'typescript', 'vimdoc', 'vim', 'bash' },
+    ignore_install = {},
+    modules = {},
 
     -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
     auto_install = false,
+
+    -- Sync installs
+    sync_install = true,
 
     highlight = { enable = true },
     indent = { enable = true },
@@ -476,18 +532,18 @@ local servers = {
   -- clangd = {},
   -- gopls = {},
   pyright = {
-    settings = {
-      pyright = {
-        autoImportCompletion = true,
+    pyright = {
+      autoImportCompletion = true,
+      useLibraryCodeForTypes = true,
+    },
+    python = {
+      analysis = {
+        autoSearchPaths = true,
+        diagnosticMode = 'openFilesOnly',
+        useLibraryCodeForTypes = true,
+        typeCheckingMode = 'on',
       },
-      python = {
-        analysis = {
-          autoSearchPaths = true,
-          diagnosticMode = 'openFilesOnly',
-          useLibraryCodeForTypes = true,
-          typeCheckingMode = 'on'
-        }
-      }
+      pythonPath = PYTHON_PATH
     }
   },
   -- rust_analyzer = {},
@@ -501,6 +557,7 @@ local servers = {
     },
   },
 }
+
 
 -- Setup neovim lua configuration
 require('neodev').setup()
@@ -516,7 +573,7 @@ mason_lspconfig.setup {
   ensure_installed = vim.tbl_keys(servers),
 }
 
-mason_lspconfig.setup_handlers {
+local handlers = {
   function(server_name)
     require('lspconfig')[server_name].setup {
       capabilities = capabilities,
@@ -526,6 +583,8 @@ mason_lspconfig.setup_handlers {
     }
   end,
 }
+
+mason_lspconfig.setup_handlers(handlers)
 
 -- [[ Configure nvim-cmp ]]
 -- See `:help cmp`
