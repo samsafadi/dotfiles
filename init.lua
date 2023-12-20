@@ -5,7 +5,7 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
 -- global variables
-PYTHON_PATH = '/Users/bassamsafadi/work/data/job-controller/.tox/py39/bin/python3.9'
+-- PYTHON_PATH = '/Users/bassamsafadi/work/data/job-controller/.tox/py39/bin/python3.9'
 
 -- Install package manager
 --    https://github.com/folke/lazy.nvim
@@ -262,7 +262,6 @@ require('lazy').setup({
             dap = { justMyCode = false },
             args = {"--log-level", "DEBUG"},
             runner = "pytest",
-            python = PYTHON_PATH,
             pytest_discover_instances = true,
           })
         }
@@ -543,7 +542,6 @@ local servers = {
         useLibraryCodeForTypes = true,
         typeCheckingMode = 'on',
       },
-      pythonPath = PYTHON_PATH
     }
   },
   -- rust_analyzer = {},
