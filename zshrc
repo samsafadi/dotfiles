@@ -28,6 +28,9 @@ FPATH=$(brew --prefix)/share/zsh/site-functions:$FPATH
 autoload -Uz compinit && compinit
 alias vi="nvim"
 
+# History
+HISTSIZE=100000
+HISTDUP=erase
 setopt sharehistory
 setopt appendhistory
 setopt hist_ignore_space
