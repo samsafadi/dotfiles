@@ -1,0 +1,75 @@
+# antigen
+source /usr/local/share/antigen/antigen.zsh
+antigen bundle zsh-users/zsh-completions
+antigen apply
+
+autoload -Uz compinit && compinit
+autoload -Uz vcs_info
+autoload -U colors && colors
+precmd() { vcs_info }
+
+ PROMPT='%B%F{blue}%~ %f%b%# '
+ setopt PROMPT_SUBST
+ zstyle ':vcs_info:git:*' formats 'on %b'
+ RPROMPT="%B%{$fg[blue]%}\$vcs_info_msg_0_%{$reset_color%}%b"
+
+# ls colors
+export LSCOLORS=exfxcxdxbxegedabagacad
+alias ls='ls --color=auto'
+
+export PATH="/usr/local/sbin:$PATH"
+export PATH="/usr/local/bin:$PATH"
+export PGCLIENTENCODING=utf-8
+# export PATH=":$PATH"
+FPATH=$(brew --prefix)/share/zsh-completions:$FPATH
+FPATH=$(brew --prefix)/share/zsh/site-functions:$FPATH
+
+
+# Append a command directly
+# zvm_after_init_commands+=('[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh')
+
+alias vi="nvim"
+alias redshift-pgcli="~/redshift.sh"
+alias redshift-pgcli-admin="~/redshift-admin.sh"
+alias tpython="/Users/bassamsafadi/work/data/job-controller/.tox/py39/bin/python3"
+
+# alias export-keys="KEYER=$(aws-keyer -s eng-west2-keyer.wlth.fr); export AWS_ACCESS_KEY=$(echo $KEYER | jq -r '.AccessKeyId'); export AWS_SECRET_KEY=$(echo $KEYER | jq -r '.SecretAccessKey')"
+
+# hadoop
+export HADOOP_HOME=/usr/local/Cellar/hadoop/3.3.6
+export PATH=$PATH:$HADOOP_HOME
+export HADOOP_HDFS_HOME=$HADOOP_HOME
+export HADOOP_MAPRED_HOME=$HADOOP_HOME
+export HADOOP_YARN_HOME=$HADOOP_HOME
+export HADOOP_COMMON_HOME=$HADOOP_HOME
+export HADOOP_COMMON_LIB_NATIVE_DIR=$HADOOP_HOME/lib/native
+export PATH=$PATH:$JAVA_HOME/bin:$HADOOP_HOME/bin:$HADOOP_HOME/sbin
+export HADOOP_OPTS="$HADOOP_OPTS -Djava.library.path=$HADOOP_HOME/lib/native"
+
+export DYLD_LIBRARY_PATH="/usr/local/Cellar/mysql@8.0/8.0.34/lib:$PATH"
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+# test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
+
+alias bump-parent="mvn -U -DreResolve=false -DallowSnapshots=true versions:update-parent versions:commit"
+EDITOR=$(which nvim)
+
+# pyenv shell 3.9.6
+# enable-fzf-tab
+
+# >>> conda initialize >>>
+# !! Contents within this block are managed by 'conda init' !!
+__conda_setup="$('/usr/local/Caskroom/miniconda/base/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
+if [ $? -eq 0 ]; then
+    eval "$__conda_setup"
+else
+    if [ -f "/usr/local/Caskroom/miniconda/base/etc/profile.d/conda.sh" ]; then
+        . "/usr/local/Caskroom/miniconda/base/etc/profile.d/conda.sh"
+    else
+        export PATH="/usr/local/Caskroom/miniconda/base/bin:$PATH"
+    fi
+fi
+unset __conda_setup
+# <<< conda initialize <<<
+
